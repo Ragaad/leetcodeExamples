@@ -34,7 +34,7 @@ gtest_discover_tests(${PROB_TARGET}_tests)
 EOF
 
 cat > "${DIR}/main.cpp" <<'EOF'
-#include <bits/stdc++.h>
+
 #include "leetcode.hpp"
 using namespace std;
 
@@ -55,7 +55,7 @@ int main(){
 EOF
 
 cat > "${DIR}/test.cpp" <<'EOF'
-#include <bits/stdc++.h>
+
 #include "leetcode.hpp"
 #include <gtest/gtest.h>
 using namespace std;
