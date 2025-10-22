@@ -1,0 +1,33 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {"major": 3, "minor": 23},
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Default (Ninja, Debug)",
+      "generator": "Ninja",
+      "binaryDir": "build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release (Ninja, O3/LTO)",
+      "generator": "Ninja",
+      "binaryDir": "build-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {"name": "default", "configurePreset": "default"},
+    {"name": "release", "configurePreset": "release"}
+  ],
+  "testPresets": [
+    {"name": "default", "configurePreset": "default"},
+    {"name": "release", "configurePreset": "release"}
+  ]
+}

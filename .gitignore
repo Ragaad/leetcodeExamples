@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# build dirs
+/build/
+/build-release/
+/cmake-build-*/
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+Testing/
+CTestTestfile.cmake
+*.cmake
+
+# Editors
+.vscode/
+.idea/

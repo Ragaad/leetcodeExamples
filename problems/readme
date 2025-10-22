@@ -1,0 +1,57 @@
+# leetcode-cpp
+
+C++20 + CMake repo for LeetCode solutions with GoogleTest.
+
+## Quick start (macOS)
+
+1. Install tools:
+   ```bash
+   brew install cmake ninja
+Configure & build:
+
+cmake --preset default
+cmake --build --preset default
+
+
+Run tests:
+
+ctest --preset default --output-on-failure
+
+
+Add a new problem skeleton:
+
+./scripts/new_problem.sh 0123 "best-time-to-buy-and-sell-stock"
+cmake --build --preset default
+ctest --preset default
+
+include/leetcode.hpp — common LeetCode types/helpers.
+
+problems/<id>-<slug>/ — each problem: main.cpp (solution/demo) + test.cpp.
+
+scripts/new_problem.sh — scaffolds a new problem directory.
+
+
+How to use it: 
+# 1) Create repo (adjust path/name as you like)
+mkdir -p ~/dev/leetcode-cpp && cd ~/dev/leetcode-cpp
+
+# 2) Create the files above (copy/paste content)
+
+# 3) Install tools
+brew install cmake ninja
+
+# 4) Configure, build, and test
+cmake --preset default
+cmake --build --preset default
+ctest --preset default --output-on-failure
+
+How you’ll use it day-to-day:
+
+Add a new problem:
+
+./scripts/new_problem.sh 0070 climbing-stairs
+cmake --build --preset default
+ctest --preset default --output-on-failure
+
+
+Put the real solution in main.cpp (and ideally unit tests in test.cpp).
