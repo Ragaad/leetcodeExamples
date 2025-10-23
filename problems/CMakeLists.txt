@@ -1,5 +1,5 @@
 # Add every problem subdirectory automatically
-file(GLOB children RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*")
+file(GLOB children RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "[0-9][0-9][0-9][0-9]-*")
 foreach(child ${children})
   if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${child}")
     add_subdirectory(${child})
