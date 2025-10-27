@@ -1,9 +1,8 @@
 from typing import List
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        if len(prices)<=1:
-            return 0
-        min_price=prices[0]
+        
+        min_price=float('inf')
         profit=0
         for price in prices:
             if price<min_price:
