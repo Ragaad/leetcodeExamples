@@ -26,8 +26,7 @@ public:
         //   while stack not empty and T[i] > T[st.top()], pop j and set ans[j] = i - j
         //   push i
         // Remaining indices have ans=0.
-        return {}; // replace
-    }
+        
 };
 
 int main(){
