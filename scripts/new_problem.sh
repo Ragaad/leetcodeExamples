@@ -1,75 +1,139 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [ $# -lt 2 ]; then
-  echo "Usage: $0 <id: 4-digit> <slug-kebab-case>"
-  echo "Example: $0 0123 best-time-to-buy-and-sell-stock"
+# Usage:
+#   ./scripts/new_problem.sh 0207 course-schedule
+#   ./scripts/new_problem.sh 2 "Add Two Numbers"
+#
+# Creates:
+#   problems/0207-course-schedule/
+#     CMakeLists.txt
+#     cpp/{main.cpp,test.cpp}
+#     python/{solution.py,test_solution.py,__init__.py}
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PROBLEMS_DIR="$ROOT/problems"
+
+if [[ $# -lt 2 ]]; then
+  echo "Usage: $0 <id> <slug or title>"
   exit 1
 fi
 
-ID="$1"
-SLUG="$2"
-DIR="problems/${ID}-${SLUG}"
+RAW_ID="$1"; shift
+RAW_SLUG="$*"
 
-if [[ ! "$ID" =~ ^[0-9]{4}$ ]]; then
-  echo "ID must be 4 digits, e.g. 0001"
+# --- normalize id to 4 digits ---
+if [[ ! "$RAW_ID" =~ ^[0-9]+$ ]]; then
+  echo "Error: id must be numeric (got '$RAW_ID')"
+  exit 1
+fi
+# avoid octal with leading zeros: 10# forces base-10
+ID=$(printf "%04d" "$((10#$RAW_ID))")
+
+# --- normalize slug: lowercase, non [a-z0-9-] -> -, collapse dashes ---
+SLUG="$(printf "%s" "$RAW_SLUG" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//; s/-+/-/g')"
+if [[ -z "$SLUG" ]]; then
+  echo "Error: slug/title normalization produced empty string."
   exit 1
 fi
 
-mkdir -p "$DIR"
+DEST="$PROBLEMS_DIR/${ID}-${SLUG}"
+CPP_DIR="$DEST/cpp"
+PY_DIR="$DEST/python"
 
-cat > "${DIR}/CMakeLists.txt" <<'EOF'
-# Auto-generated problem
+if [[ -e "$DEST" ]]; then
+  echo "Error: problem folder already exists: $DEST"
+  exit 1
+fi
+
+mkdir -p "$CPP_DIR" "$PY_DIR"
+
+# --- CMakeLists for this problem ---
+cat > "$DEST/CMakeLists.txt" <<'CMAKE'
+# Per-problem CMake
 get_filename_component(PROB_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 string(REPLACE "-" "_" PROB_TARGET ${PROB_NAME})
 
-add_executable(${PROB_TARGET} main.cpp)
+add_executable(${PROB_TARGET} cpp/main.cpp)
 target_link_libraries(${PROB_TARGET} PRIVATE lc_common)
 
-add_executable(${PROB_TARGET}_tests test.cpp)
+add_executable(${PROB_TARGET}_tests cpp/test.cpp)
 target_link_libraries(${PROB_TARGET}_tests PRIVATE lc_common GTest::gtest_main)
 
 include(GoogleTest)
-gtest_discover_tests(${PROB_TARGET}_tests)
-EOF
+gtest_discover_tests(${PROB_TARGET}_tests) # DISCOVERY_MODE defaults to POST_BUILD
+CMAKE
 
-cat > "${DIR}/main.cpp" <<'EOF'
-
+# --- C++ main.cpp stub ---
+cat > "$CPP_DIR/main.cpp" <<'CPP'
 #include "leetcode.hpp"
 using namespace std;
 
-// Replace with the actual solution for this problem
 class Solution {
 public:
-    int placeholder(int x) { return x; }
+    // TODO: implement for this problem
+    void placeholder() {}
 };
 
-int main(){
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    Solution s;
-    cout << s.placeholder(42) << "\n";
+    // TODO: small demo if desired
+    // Solution s; ...
     return 0;
 }
-EOF
+CPP
 
-cat > "${DIR}/test.cpp" <<'EOF'
-
+# --- C++ test.cpp stub (GoogleTest) ---
+cat > "$CPP_DIR/test.cpp" <<'CPP'
 #include "leetcode.hpp"
 #include <gtest/gtest.h>
 using namespace std;
 
-// Mirror the class you implement in main.cpp or move it to a header
 class Solution {
 public:
-    int placeholder(int x) { return x; }
+    void placeholder() {}
 };
 
-TEST(Template, Works){
+TEST(Template, Smoke) {
     Solution s;
-    EXPECT_EQ(s.placeholder(42), 42);
+    SUCCEED(); // replace with real tests
 }
-EOF
+CPP
 
-echo "Created ${DIR}"
+# --- Python skeleton ---
+cat > "$PY_DIR/solution.py" <<'PY'
+# TODO: implement the Python version for this problem.
+
+class Solution:
+    def placeholder(self):
+        pass
+
+def solve():
+    # optional runner entrypoint
+    pass
+
+if __name__ == "__main__":
+    print("Implement me!")
+PY
+
+cat > "$PY_DIR/test_solution.py" <<'PY'
+# pytest skeleton. Replace with real tests.
+def test_placeholder():
+    assert True
+PY
+
+: > "$PY_DIR/__init__.py"
+
+echo "✓ Created ${DEST}"
+echo "  - cpp/: main.cpp, test.cpp"
+echo "  - python/: solution.py, test_solution.py, __init__.py"
+echo "  - CMakeLists.txt (targets derived from folder name)"
+
+echo
+echo "Next:"
+echo "  1) Implement cpp/main.cpp and cpp/test.cpp"
+echo "  2) Reconfigure & build:"
+echo "       cmake --preset default && cmake --build --preset default && ctest --preset default --output-on-failure"
+echo "  3) (Optional) Write Python solution/tests in python/"
