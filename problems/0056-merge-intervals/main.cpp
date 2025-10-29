@@ -10,7 +10,7 @@ public:
         // 1) sort by start
         std::sort(intervals.begin(), intervals.end(),[](const vector<int>& a, const vector<int>& b){
              if (a[0] != b[0]) return a[0] < b[0];
-             return a[1] < b[1];);
+             return a[1] < b[1];});
         // 2) sweep once, merging into an output vector
         vector<vector<int>> merged;
         for (const auto& interval: intervals){

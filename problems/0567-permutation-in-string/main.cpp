@@ -11,7 +11,7 @@ public:
         if (m>n) return false;
         int a[26]={0}, b[26]={0}; // to keep the matches 
         for ( char c: s1) a[c-'a']=1;
-        for( int i=0; i<m; i++) b[s2[i]-1]=1;
+        for( int i=0; i<m; i++) b[s2[i]-'a']=1;
         int matches=0;
         for ( int k=0; k<26; k++)
             if(a[k]==b[k])
