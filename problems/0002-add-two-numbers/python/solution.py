@@ -32,7 +32,7 @@ class Solution:
             sum+=carry
             
             num3.val=sum%10
-            carry=int(sum/10)
+            carry=sum//10
                 
         if carry>0:
             num3.next=ListNode()
