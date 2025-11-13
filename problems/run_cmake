@@ -1,0 +1,21 @@
+# Re-configure (only needed after adding/renaming files)
+cmake --preset default
+
+# Build only this problem’s test binary
+cmake --build --preset default --target 0011_container_with_most_water_tests
+
+# Run only these tests
+ctest --preset default -R 0011_container_with_most_water --output-on-failure
+
+# (Optional) build and run the problem’s main executable
+cmake --build --preset default --target 0011_container_with_most_water
+./build/problems/0011-container-with-most-water/0011_container_with_most_water
+ninja -C build -t targets | grep 0011_
+
+# Reconfigure so CMake (re)discovers tests
+cmake --preset default
+cmake --build --preset default
+
+# See what CTest actually sees
+ctest --preset default -N
+
