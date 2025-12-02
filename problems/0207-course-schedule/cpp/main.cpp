@@ -15,7 +15,7 @@ public:
              adj[b].push_back(a);
              indeg[a]++;               // in-degree of a
            }
-           queue<int> q;
+        queue<int> q;
         for (int v = 0; v < numCourses; ++v)
             if (indeg[v] == 0) q.push(v);
 
